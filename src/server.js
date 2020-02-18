@@ -33,8 +33,8 @@ const handlePost = (req, res, parsedUrl) => {
 const handleGet = (req, res, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(req, res);
-  } else if (parsedUrl.pathname === '/getUsers') {
-    jsonHandler.getUsers(req, res, false);
+  } else if (parsedUrl.pathname === '/vue.js') {
+    htmlHandler.getVue(req,res);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(req, res);
   } else {

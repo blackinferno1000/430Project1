@@ -1,4 +1,4 @@
-const users = {};
+const mangaList = {};
 
 const respondJSON = (req, res, status, object) => {
   res.writeHead(status, { 'Content-Type': 'application/json' });
@@ -11,9 +11,9 @@ const respondJSONMeta = (req, res, status) => {
   res.end();
 };
 
-const getUsers = (req, res, meta) => {
+const getManga = (req, res, meta) => {
   const responseJSON = {
-    users,
+    mangaList,
   };
 
   if (meta) {
@@ -36,7 +36,7 @@ const notFound = (req, res, meta) => {
   return respondJSON(req, res, 404, responseJSON);
 };
 
-const addUser = (req, res, body) => {
+const addManga = (req, res, body) => {
   const responseJSON = {
     message: 'Name and age are both required',
   };
@@ -66,7 +66,7 @@ const addUser = (req, res, body) => {
 };
 
 module.exports = {
-  getUsers,
-  addUser,
+  getManga,
+  addManga,
   notFound,
 };

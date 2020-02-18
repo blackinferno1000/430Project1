@@ -1,141 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Our simple HTTP server</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script type="text/babel">
-    const parseJSON = (xhr, content) => {
-      const obj = JSON.parse(xhr.response);
+  <head>
+    <title>MangaTracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script type="text/babel">
+      // const parseJSON = (xhr, content) => {
+      //   const obj = JSON.parse(xhr.response);
 
-      if(xhr.response) {
-        if(obj.message) {
-        let message = document.createElement('p');
-        message.textContent = `Message: ${obj.message}`;
-        content.appendChild(message);
-        }
+      //   if(xhr.response) {
+      //     if(obj.message) {
+      //     let message = document.createElement('p');
+      //     message.textContent = `Message: ${obj.message}`;
+      //     content.appendChild(message);
+      //     }
 
-        if(obj.users){
-        let users = document.createElement('p');
-        users.textContent = JSON.stringify(obj.users);
-        content.appendChild(users);
-        }
-      }
-    };
+      //     if(obj.users){
+      //     let users = document.createElement('p');
+      //     users.textContent = JSON.stringify(obj.users);
+      //     content.appendChild(users);
+      //     }
+      //   }
+      // };
 
-    const handleResponse = (xhr, parse) => {
-      const content = document.querySelector('#content');
+      // const handleResponse = (xhr, parse) => {
+      //   const content = document.querySelector('#content');
 
-      switch(xhr.status){
-        case 200:
-          content.innerHTML = '<b>Success</b>';
-          break;
-        case 201:
-          content.innerHTML = '<b>Created</b>';
-          break;
-        case 204:
-          content.innerHTML = '<b>Updated (No Content)</b>';
-          break;
-        case 400:
-          content.innerHTML = '<b>Bad Request</b>';
-          break;
-        case 404:
-          content.innerHTML = '<b>Resource Not Found</b>';
-          break;
-        default:
-          content.innerHTML = '<b>Status Code Not Implemented By Client</b>';
-          break;
-      }
+      //   switch(xhr.status){
+      //     case 200:
+      //       content.innerHTML = '<b>Success</b>';
+      //       break;
+      //     case 201:
+      //       content.innerHTML = '<b>Created</b>';
+      //       break;
+      //     case 204:
+      //       content.innerHTML = '<b>Updated (No Content)</b>';
+      //       break;
+      //     case 400:
+      //       content.innerHTML = '<b>Bad Request</b>';
+      //       break;
+      //     case 404:
+      //       content.innerHTML = '<b>Resource Not Found</b>';
+      //       break;
+      //     default:
+      //       content.innerHTML = '<b>Status Code Not Implemented By Client</b>';
+      //       break;
+      //   }
 
-      parseJSON(xhr, content);
-    };
+      //   parseJSON(xhr, content);
+      // };
 
-    const sendPost = (e, nameForm) => {
-      const nameAction = nameForm.getAttribute('action');
-      const nameMethod = nameForm.getAttribute('method');
-    
-      const nameField = nameForm.querySelector('#nameField');
-      const ageField = nameForm.querySelector('#ageField');
-    
-      const xhr = new XMLHttpRequest();
-      xhr.open(nameMethod, nameAction);
+      // const sendPost = (e, nameForm) => {
+      //   const nameAction = nameForm.getAttribute('action');
+      //   const nameMethod = nameForm.getAttribute('method');
 
-      xhr.setRequestHeader('Accept', 'application/json');
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      //   const nameField = nameForm.querySelector('#nameField');
+      //   const ageField = nameForm.querySelector('#ageField');
 
-      xhr.onload = () => handleResponse(xhr, true);
+      //   const xhr = new XMLHttpRequest();
+      //   xhr.open(nameMethod, nameAction);
 
-      const formData = `name=${nameField.value}&age=${ageField.value}`;
+      //   xhr.setRequestHeader('Accept', 'application/json');
+      //   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-      xhr.send(formData);
-
-      e.preventDefault();
-
-      return false;
-    };
-
-    const sendGet = (e, userForm) => {
-      const url = userForm.querySelector('#urlField');
-      const method = userForm.querySelector('#methodSelect');
-
-      const xhr = new XMLHttpRequest();
-      xhr.open(method.value, url.value);
-
-      // if(method.value === 'get'){
       //   xhr.onload = () => handleResponse(xhr, true);
-      // } else if(mathod.value === 'head'){
-      //   xhr.onload = () => handleResponse(xhr, false);
+
+      //   const formData = `name=${nameField.value}&age=${ageField.value}`;
+
+      //   xhr.send(formData);
+
+      //   e.preventDefault();
+
+      //   return false;
+      // };
+
+      // const sendGet = (e, userForm) => {
+      //   const url = userForm.querySelector('#urlField');
+      //   const method = userForm.querySelector('#methodSelect');
+
+      //   const xhr = new XMLHttpRequest();
+      //   xhr.open(method.value, url.value);
+
+      //   // if(method.value === 'get'){
+      //   //   xhr.onload = () => handleResponse(xhr, true);
+      //   // } else if(mathod.value === 'head'){
+      //   //   xhr.onload = () => handleResponse(xhr, false);
+      //   // }
+
+      //   xhr.onload = () => handleResponse(xhr);
+
+      //   xhr.setRequestHeader('Accept', 'application/json');
+      //   xhr.send();
+
+      //   e.preventDefault();
+
+      //   return false;
       // }
 
-      xhr.onload = () => handleResponse(xhr);
+      // const init = () => {
+      //   const nameForm = document.querySelector('#nameForm');
+      //   const userForm = document.querySelector('#userForm')
 
-      xhr.setRequestHeader('Accept', 'application/json');
-      xhr.send();
+      //   const addUser = (e) => sendPost(e, nameForm);
+      //   nameForm.addEventListener('submit', addUser);
 
-      e.preventDefault();
+      //   const getUser = (e) => sendGet(e, userForm);
+      //   userForm.addEventListener('submit', getUser);
+      // };
 
-      return false;
-    }
+      const init = () => {};
 
-    const init = () => {
-      const nameForm = document.querySelector('#nameForm');
-      const userForm = document.querySelector('#userForm')
-      
-      const addUser = (e) => sendPost(e, nameForm);
-      nameForm.addEventListener('submit', addUser);
-
-      const getUser = (e) => sendGet(e, userForm);
-      userForm.addEventListener('submit', getUser);
-    };
-
-    window.onload = init;
-
-  </script>
-</head>
-<body>
-  <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form>
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Send" />
-    </form>
-  </section>
-  <section id="content">
-  </section>
-</body>
+      window.onload = init;
+    </script>
+  </head>
+  <body>
+    <section id="app">
+      <section id="search">
+        <input type="search" name="searchbar" id="searchbar" v-model="searchQuery">
+        <input type="submit" value="Search">
+      </section>
+      <section id="content">
+        <section>
+          <button v-on:click="getResultSection">Results</button>
+          <button v-on:click="getTrackedSection">Tracked</button>
+        </section>
+        <section v-if="searching">searching</section>
+        <section v-else-if="!searching">not searching</section>
+        <!-- psedudo -->
+        <!-- v if results div -->
+        <!-- v for returned manga -->
+        <!-- v if results div -->
+      </section>
+    </section>
+    <script type="text/babel" src="/vue.js"></script>
+  </body>
 </html>
