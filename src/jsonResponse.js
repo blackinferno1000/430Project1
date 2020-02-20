@@ -38,24 +38,27 @@ const notFound = (req, res, meta) => {
 
 const addManga = (req, res, body) => {
   const responseJSON = {
-    message: 'Name and age are both required',
+    message: 'Name and chapter details are required',
   };
 
-  if (!body.name || !body.age) {
+  if (!body.title || !body.currentChapter || !body.maxChapter) {
     responseJSON.id = 'missingParams';
     return respondJSON(req, res, 400, responseJSON);
   }
 
   let responseCode = 201;
 
-  if (users[body.name]) {
+  if (mangaList[body.title]) {
     responseCode = 204;
   } else {
-    users[body.name] = {};
+    mangaList[body.title] = {};
   }
 
-  users[body.name].name = body.name;
-  users[body.name].age = body.age;
+  mangaList[body.title].title = body.title;
+  mangaList[body.title].author = body.author;
+  mangaList[body.title].currentChapter = body.currentChapter;
+  mangaList[body.title].maxChapter = body.maxChapter;
+  mangaList[body.title].description = body.description;
 
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';

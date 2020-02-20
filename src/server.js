@@ -7,7 +7,7 @@ const jsonHandler = require('./jsonResponse.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const handlePost = (req, res, parsedUrl) => {
-  if (parsedUrl.pathname === '/addUser') {
+  if (parsedUrl.pathname === '/addManga') {
     const body = [];
 
     // if theres an issue give status 400 and end
@@ -25,7 +25,7 @@ const handlePost = (req, res, parsedUrl) => {
       // Buffer takes parts of an array and turns it into one variable on string
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString);
-      jsonHandler.addUser(req, res, bodyParams);
+      jsonHandler.addManga(req, res, bodyParams);
     });
   }
 };
@@ -34,7 +34,11 @@ const handleGet = (req, res, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(req, res);
   } else if (parsedUrl.pathname === '/vue.js') {
-    htmlHandler.getVue(req,res);
+    htmlHandler.getVue(req, res);
+  } else if (parsedUrl.pathname === '/client.js') {
+    htmlHandler.getClientJS(req, res);
+  } else if (parsedUrl.pathname === '/getManga') {
+    jsonHandler.getManga(req, res, false);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(req, res);
   } else {
@@ -43,8 +47,8 @@ const handleGet = (req, res, parsedUrl) => {
 };
 
 const handleHead = (req, res, parsedUrl) => {
-  if (parsedUrl.pathname === '/getUsers') {
-    jsonHandler.getUsers(req, res, true);
+  if (parsedUrl.pathname === '/getManga') {
+    jsonHandler.getManga(req, res, true);
   } else {
     jsonHandler.notFound(req, res, true);
   }

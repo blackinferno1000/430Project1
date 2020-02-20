@@ -4,7 +4,7 @@
   "description": "api powered application",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon --watch ./src ./src/server.js",
+    "start": "nodemon -e js,html,css --watch ./src --watch ./client ./src/server.js",
     "pretest": "eslint ./src --fix",
     "test": "echo \"Tests complete\"",
     "debug": "node --inspect ./src/server.js"
