@@ -6,6 +6,7 @@ const jsonHandler = require('./jsonResponse.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+// handles post requests
 const handlePost = (req, res, parsedUrl) => {
   if (parsedUrl.pathname === '/addManga') {
     const body = [];
@@ -30,11 +31,10 @@ const handlePost = (req, res, parsedUrl) => {
   }
 };
 
+// handles get requests
 const handleGet = (req, res, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(req, res);
-  } else if (parsedUrl.pathname === '/vue.js') {
-    htmlHandler.getVue(req, res);
   } else if (parsedUrl.pathname === '/client.js') {
     htmlHandler.getClientJS(req, res);
   } else if (parsedUrl.pathname === '/getManga') {
@@ -46,6 +46,7 @@ const handleGet = (req, res, parsedUrl) => {
   }
 };
 
+// handles head requests
 const handleHead = (req, res, parsedUrl) => {
   if (parsedUrl.pathname === '/getManga') {
     jsonHandler.getManga(req, res, true);
@@ -54,6 +55,7 @@ const handleHead = (req, res, parsedUrl) => {
   }
 };
 
+// handles requests
 const onRequest = (req, res) => {
   const parsedUrl = url.parse(req.url);
 
@@ -66,6 +68,7 @@ const onRequest = (req, res) => {
   }
 };
 
+// creates server
 http.createServer(onRequest).listen(port);
 
 console.log(`Listening on 127.0.0.1: ${port}`);

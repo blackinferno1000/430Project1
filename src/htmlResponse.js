@@ -1,28 +1,25 @@
 const fs = require('fs');
 
+// paths
 const index = fs.readFileSync(`${__dirname}/../client/client.html`);
 const css = fs.readFileSync(`${__dirname}/../client/style.css`);
-const vue = fs.readFileSync(`${__dirname}/vue.js`);
 const client = fs.readFileSync(`${__dirname}/client.js`);
 
+// returns index
 const getIndex = (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write(index);
   res.end();
 };
 
+// returns css
 const getCSS = (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/css' });
   res.write(css);
   res.end();
 };
 
-const getVue = (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/javascript' });
-  res.write(vue);
-  res.end();
-};
-
+// returns client.js
 const getClientJS = (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/javascript' });
   res.write(client);
@@ -32,6 +29,5 @@ const getClientJS = (req, res) => {
 module.exports = {
   getIndex,
   getCSS,
-  getVue,
   getClientJS,
 };

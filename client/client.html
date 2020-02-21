@@ -11,6 +11,7 @@
   <body>
     <section id="app">
       <section id="search">
+        <h1>MangaTracker</h1>
         <input type="search" name="searchbar" id="searchbar" v-model="searchQuery">
         <input type="submit" value="Search">
       </section>
@@ -18,7 +19,7 @@
         <section>
           <form id="getForm" action="/getManga" method="get">
             <button type="button" v-on:click="getResultSection">Results</button>
-            <button type="submit" v-on:click="getTrackedSection">Tracked</button>
+            <button type="button" v-on:click="getTrackedSection($event)">Tracked</button>
           </form>
         </section>
         <section id="addSection" v-if="searching">
@@ -35,19 +36,28 @@
             <input type="number" name="maxChapter" id="maxChapter" min="1" max="9999">
             <label for="title">Description</label>
             <input type="text" name="description" id="description" placeholder="manga description">
-            <button type="submit">Add</button>
+            <button v-on:click="addManga($event)" type="submit">Add</button>
           </form>
           </div>
         </section>
         <section v-else-if="!searching">
-
+          <div id="trackedScrollWrap">
+            <template class="trackedCard" v-for="manga in mangaList.mangaList">
+              <label>Title:</label>
+              <p>{{manga.title}}</p>
+              <label>Author:</label>
+              <p>{{manga.author}}</p>
+              <label>Current Chapter:</label>
+              <input type="number" min="1" max="9999" :value="manga.currentChapter">
+              <label>Max Chapter:</label>
+              <input type="number" min="1" max="9999" :value="manga.maxChapter">
+              <label>Description:</label>
+              <p>{{manga.description}}</p>
+              <button v-on:click="deleteCard(manga.title)">Delete</button>
+            </template>
+          </div>
         </section>
-        <!-- psedudo -->
-        <!-- v if results div -->
-        <!-- v for returned manga -->
-        <!-- v if results div -->
       </section>
     </section>
-    <script type="text/babel" src="/vue.js"></script>
   </body>
 </html>

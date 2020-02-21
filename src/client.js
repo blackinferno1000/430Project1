@@ -1,67 +1,104 @@
+/* eslint-disable */
 
-const parseJSON = (xhr, content) => {
-  const obj = JSON.parse(xhr.response);
+//Vue app
+const app = new Vue({
+  el: '#app',
+  data: {
+    mangaList: [],
+    searchQuery: '',
+    filters: {},
+    genres: {},
+    searching: true,
+  },
+  methods: {
+    //toggle view
+    getResultSection(e) {
+      this.searching = true;
+    },
+    //toggle view
+    getTrackedSection(e) {
+      this.searching = false;
+      this.getManga(e);
+    },
+    //parses incoming json from requests
+    parseJSON(xhr, content) {
+      const obj = JSON.parse(xhr.response);
 
-  if (xhr.response) {
+      if (xhr.response) {
+        this.mangaList = obj;
+      }
+    },
+    //handles if json needs parsing
+    handleResponse(xhr, parse) {
+      const content = document.querySelector('#content');
+      if (parse) {
+        this.parseJSON(xhr, content);
+      }
+    },
+    //sends post requests
+    sendPost(e, postForm) {
+      e.preventDefault();
 
-  }
-};
+      const action = postForm.getAttribute('action');
+      const method = postForm.getAttribute('method');
 
-const handleResponse = (xhr, parse) => {
-  const content = document.querySelector('#content');
+      const title = postForm.querySelector('#title');
+      const author = postForm.querySelector('#author');
+      const currentChapter = postForm.querySelector('#currentChapter');
+      const maxChapter = postForm.querySelector('#maxChapter');
+      const description = postForm.querySelector('#description');
 
-  parseJSON(xhr, content);
-};
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, action);
 
-const sendPost = (e, postForm) => {
-  const action = nameForm.getAttribute('action');
-  const method = nameForm.getAttribute('method');
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-  const title = postForm.querySelector('#title');
-  const author = postForm.querySelector('#author');
-  const currentChapter = postForm.querySelector('#currentChapter');
-  const maxChapter = postForm.querySelector('#maxChapter');
-  const description = postForm.querySelector('#description');
+      xhr.onload = () => this.handleResponse(xhr, false);
 
-  const xhr = new XMLHttpRequest();
-  xhr.open(method, action);
+      const formData = `title=${title.value}&author=${author.value}&currentChapter=${currentChapter.value}&maxChapter=${maxChapter.value}&description=${description.value}`;
 
-  xhr.setRequestHeader('Accept', 'application/json');
-  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.send(formData);
 
-  xhr.onload = () => handleResponse(xhr, true);
+      e.preventDefault();
 
-  const formData = `title=${title.value}&author=${author.value}&currentChapter=${currentChapter.value}&maxChapter=${maxChapter.value}&description=${description.value}`;
+      return false;
+    },
+    //sends get requests
+    sendGet(e, getForm) {
+      e.preventDefault();
 
-  xhr.send(formData);
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', '/getManga');
 
-  e.preventDefault();
+      xhr.onload = () => this.handleResponse(xhr, true);
 
-  return false;
-};
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.send();
 
-const sendGet = (e, getForm) => {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', '/getManga');
+      e.preventDefault();
 
-  xhr.onload = () => handleResponse(xhr);
-
-  xhr.setRequestHeader('Accept', 'application/json');
-  xhr.send();
-
-  e.preventDefault();
-
-  return false;
-};
-
-const init = () => {
-  const getForm = document.querySelector('#getForm');
-  const addForm = document.querySelector('#addForm');
-
-  const getManga = (e) => sendGet(e, getForm);
-  getForm.addEventListener('click', getManga);
-
-  const addManga = (e) => sendPost(e, addForm);
-  addForm.addEventListener('click', addManga);
-};
-window.onload = init;
+      return false;
+    },
+    //event listener to send get requests
+    getManga(e) {
+      const getForm = document.querySelector('#getForm');
+      this.sendGet(e, getForm);
+    },
+    //event listener to send post requests
+    addManga(e) {
+      const addForm = document.querySelector('#addForm');
+      this.sendPost(e, addForm);
+    },
+    //deletes cards from datamodel and view
+    deleteCard(id) {
+      console.log(this.mangaList.mangaList[id]);
+      delete this.mangaList.mangaList[id];
+      this.forceUpdate();
+    },
+    //updates view
+    forceUpdate() {
+      this.$forceUpdate(); 
+    },
+  },
+});

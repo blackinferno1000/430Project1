@@ -1,16 +1,20 @@
+// "DataModel"
 const mangaList = {};
 
+// returns json and head
 const respondJSON = (req, res, status, object) => {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.write(JSON.stringify(object));
   res.end();
 };
 
+// returns head
 const respondJSONMeta = (req, res, status) => {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.end();
 };
 
+// gets dataModel
 const getManga = (req, res, meta) => {
   const responseJSON = {
     mangaList,
@@ -23,6 +27,7 @@ const getManga = (req, res, meta) => {
   return respondJSON(req, res, 200, responseJSON);
 };
 
+// handles not found
 const notFound = (req, res, meta) => {
   const responseJSON = {
     message: 'The page you are looking for was not found.',
@@ -36,6 +41,7 @@ const notFound = (req, res, meta) => {
   return respondJSON(req, res, 404, responseJSON);
 };
 
+// adds/updates manga to dataModel
 const addManga = (req, res, body) => {
   const responseJSON = {
     message: 'Name and chapter details are required',
