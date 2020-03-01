@@ -3,61 +3,187 @@
   <head>
     <title>MangaTracker</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- development version, includes helpful console warnings -->
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
     <script type="text/babel" src="/client.js"></script>
   </head>
   <body>
-    <section id="app">
-      <section id="search">
-        <h1>MangaTracker</h1>
-        <input type="search" name="searchbar" id="searchbar" v-model="searchQuery">
-        <input type="submit" value="Search">
-      </section>
-      <section id="content">
-        <section>
-          <form id="getForm" action="/getManga" method="get">
-            <button type="button" v-on:click="getResultSection">Results</button>
-            <button type="button" v-on:click="getTrackedSection($event)">Tracked</button>
-          </form>
+    <section id="app" class="section">
+      <div class="column is-full container">
+        <section id="search">
+          <h1 class="is-size-1">MangaTracker</h1>
+          <h5 class="is-size-3">Search for a manga and track your progress.</h5>
+          <input
+            type="search"
+            name="searchbar"
+            id="searchbar"
+            v-model="searchQuery"
+            class="input"
+            placeholder="Search Manga"
+            v-on:keyup.13="searchManga"
+          />
+          <input
+            class="input"
+            type="submit"
+            value="Search"
+            v-on:click="searchManga"
+          />
         </section>
-        <section id="addSection" v-if="searching">
-          <div id="addDiv">
-            <h1>Add a manga:</h1>
-          <form id="addForm" action="/addManga" method="POST">
-            <label for="title">Manga Title</label>
-            <input type="text" name="title" id="title" placeholder="manga title">
-            <label for="title">Author</label>
-            <input type="text" name="author" id="author" placeholder="manga author">
-            <label for="title">Current Chapter</label>
-            <input type="number" name="currentChapter" id="currentChapter" min="1" max="9999">
-            <label for="title">Max Chapter(estimate if ongoing)</label>
-            <input type="number" name="maxChapter" id="maxChapter" min="1" max="9999">
-            <label for="title">Description</label>
-            <input type="text" name="description" id="description" placeholder="manga description">
-            <button v-on:click="addManga($event)" type="submit">Add</button>
-          </form>
-          </div>
+        <section id="content">
+          <section>
+            <form id="getForm" action="/getManga" method="GET">
+              <div class="box">
+                <button
+                  class="button"
+                  type="button"
+                  v-on:click="getResultSection"
+                >
+                  Results
+                </button>
+                <button
+                  class="button"
+                  type="button"
+                  v-on:click="getTrackedSection($event)"
+                >
+                  Tracked
+                </button>
+              </div>
+            </form>
+          </section>
+          <section id="addSection" v-if="searching">
+            <div id="addDiv">
+              <h1 class="is-size-3">Add a manga:</h1>
+              <template
+                class="resultCard"
+                v-for="result in searchResults.results"
+              >
+                <div class="box">
+                  <article class="media">
+                    <div class="media-left">
+                      <figure class="image">
+                        <img
+                          v-bind:src="result.image_url"
+                          v-bind:alt="result.title"
+                        />
+                      </figure>
+                    </div>
+                    <div class="media-content">
+                      <form
+                        v-bind:id="result.title.replace(/\s/g, '')"
+                        class="addForm"
+                        action="/addManga"
+                        method="POST"
+                      >
+                        <h1 class="title">{{result.title}}</h1>
+                        <label class="label" for="currentChapter"
+                          >Current Chapter</label
+                        >
+                        <input
+                          type="number"
+                          name="currentChapter"
+                          min="1"
+                          max="9999"
+                          class="input currentChapter"
+                        />
+                        <label class="label" for="maxChapter"
+                          >Max Chapters(can be adjusted later)</label
+                        >
+                        <p class="maxChapter">{{result.chapters}}</p>
+                        <label class="label" for="synopsis">Synopsis</label>
+                        <textarea class="textarea synopsis">
+{{result.synopsis}}</textarea
+                        >
+                        <button
+                          class="button"
+                          v-on:click="addManga($event)"
+                          type="submit"
+                        >
+                          Add
+                        </button>
+                      </form>
+                    </div>
+                  </article>
+                </div>
+              </template>
+            </div>
+          </section>
+          <section v-else-if="!searching">
+            <div id="trackedScrollWrap">
+              <h1 class="is-size-3">Tracked Manga:</h1>
+              <template
+                class="trackedCard"
+                v-for="manga in mangaList.mangaList"
+              >
+                <div class="box">
+                  <article class="media">
+                    <!-- <div class="media-left">
+                      <figure class="image">
+                        <img v-bind:src="manga.image_url" v-bind:alt="manga.title">
+                      </figure>
+                    </div> -->
+                    <div class="media-content">
+                      <form
+                        class="updateForm"
+                        action="/updateManga"
+                        method="PUT"
+                      >
+                        <label class="label">Title:</label>
+                        <h1 class="title">{{manga.title}}</h1>
+                        <label class="label">Current Chapter:</label>
+                        <input
+                          class="currentChapter"
+                          type="number"
+                          min="1"
+                          max="9999"
+                          :value="manga.currentChapter"
+                          class="input currentChapter"
+                        />
+                        <label class="label">Max Chapter:</label>
+                        <input
+                          class="maxChapter"
+                          type="number"
+                          min="1"
+                          max="9999"
+                          :value="manga.maxChapter"
+                          class="input maxChapter"
+                        />
+                        <label class="label">Description:</label>
+                        <textarea class="description textarea">
+{{manga.description}}</textarea
+                        >
+                        <button
+                          class="button"
+                          v-on:click="updateManga($event)"
+                          type="submit"
+                        >
+                          Update
+                        </button>
+                      </form>
+                      <button
+                        class="button"
+                        v-on:click="deleteCard(manga.title)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </article>
+                </div>
+              </template>
+            </div>
+          </section>
         </section>
-        <section v-else-if="!searching">
-          <div id="trackedScrollWrap">
-            <template class="trackedCard" v-for="manga in mangaList.mangaList">
-              <label>Title:</label>
-              <p>{{manga.title}}</p>
-              <label>Author:</label>
-              <p>{{manga.author}}</p>
-              <label>Current Chapter:</label>
-              <input type="number" min="1" max="9999" :value="manga.currentChapter">
-              <label>Max Chapter:</label>
-              <input type="number" min="1" max="9999" :value="manga.maxChapter">
-              <label>Description:</label>
-              <p>{{manga.description}}</p>
-              <button v-on:click="deleteCard(manga.title)">Delete</button>
-            </template>
-          </div>
-        </section>
-      </section>
+      </div>
     </section>
   </body>
 </html>

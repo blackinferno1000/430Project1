@@ -28,6 +28,50 @@ const handlePost = (req, res, parsedUrl) => {
       const bodyParams = query.parse(bodyString);
       jsonHandler.addManga(req, res, bodyParams);
     });
+  } else if (parsedUrl.pathname === '/deleteManga') {
+    const body = [];
+
+    // if theres an issue give status 400 and end
+    req.on('error', (err) => {
+      console.dir(err);
+      res.statusCode = 400;
+      res.end();
+    });
+
+    req.on('data', (chunk) => {
+      body.push(chunk);
+    });
+
+    req.on('end', () => {
+      // Buffer takes parts of an array and turns it into one variable on string
+      const bodyString = Buffer.concat(body).toString();
+      const bodyParams = query.parse(bodyString);
+      jsonHandler.deleteManga(req, res, bodyParams);
+    });
+  }
+};
+
+const handlePut = (req, res, parsedUrl) => {
+  if (parsedUrl.pathname === '/updateManga') {
+    const body = [];
+
+    // if theres an issue give status 400 and end
+    req.on('error', (err) => {
+      console.dir(err);
+      res.statusCode = 400;
+      res.end();
+    });
+
+    req.on('data', (chunk) => {
+      body.push(chunk);
+    });
+
+    req.on('end', () => {
+      // Buffer takes parts of an array and turns it into one variable on string
+      const bodyString = Buffer.concat(body).toString();
+      const bodyParams = query.parse(bodyString);
+      jsonHandler.addManga(req, res, bodyParams);
+    });
   }
 };
 
@@ -63,6 +107,8 @@ const onRequest = (req, res) => {
     handlePost(req, res, parsedUrl);
   } else if (req.method === 'GET') {
     handleGet(req, res, parsedUrl);
+  } else if (req.method === 'PUT') {
+    handlePut(req, res, parsedUrl);
   } else {
     handleHead(req, res, parsedUrl);
   }

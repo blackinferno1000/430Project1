@@ -1,28 +1,33 @@
-html, body {
+body {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: bisque;
+  background-color: #967ecb;
   box-sizing: border-box;
 }
 
-#content, #search {
-  font-size: 2em;
-  text-align: center;
-}
-
-#content {
-  margin-top: 25px;
-}
-#addDiv {
-  text-align: center;
-  display: inline-block;
-}
-#addSection {
-  width: 100%;
+#app {
+  min-height: 100vh;
+  color: white;
 }
 
 #search {
-  margin-top: 100px;
+  margin-bottom: 25px;
+}
+
+#search input[type="submit"] {
+  width: 15%;
+  margin-top: 5px;
+}
+
+.addForm button,
+.updateForm button,
+.media-content button {
+  margin-top: 10px;
+}
+
+#addDiv h1,
+#trackedScrollWrap {
+  margin: 15px 0;
 }

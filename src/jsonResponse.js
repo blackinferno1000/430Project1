@@ -61,7 +61,6 @@ const addManga = (req, res, body) => {
   }
 
   mangaList[body.title].title = body.title;
-  mangaList[body.title].author = body.author;
   mangaList[body.title].currentChapter = body.currentChapter;
   mangaList[body.title].maxChapter = body.maxChapter;
   mangaList[body.title].description = body.description;
@@ -73,9 +72,24 @@ const addManga = (req, res, body) => {
 
   return respondJSONMeta(req, res, responseCode);
 };
+// deletes manga
+const deleteManga = (req, res, body) => {
+  const responseJSON = {
+    message: 'updating mangaList',
+  };
+  console.dir(body);
+  console.dir(body.title);
+
+  const responseCode = 201;
+
+  delete mangaList[body.title];
+
+  return respondJSON(req, res, responseCode, responseJSON);
+};
 
 module.exports = {
   getManga,
   addManga,
   notFound,
+  deleteManga,
 };
