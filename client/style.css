@@ -28,6 +28,6 @@ body {
 }
 
 #addDiv h1,
-#trackedScrollWrap {
+#trackedScrollWrap h1 {
   margin: 15px 0;
 }
